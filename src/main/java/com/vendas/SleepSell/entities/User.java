@@ -13,7 +13,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "tb_cliente")
-public class Cliente implements Serializable {
+public class User implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -21,21 +21,21 @@ public class Cliente implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
-	private String nome;
-	private String cpf;
-	private String telefone;
+	private String name;
+	private String nationalId;
+	private String phone;
 	
-	@OneToMany(mappedBy = "cliente")
-	private List<Pedido> pedidos;
+	@OneToMany(mappedBy = "user")
+	private List<Order> order;
 	
-	public Cliente() {}
+	public User() {}
 	
-	public Cliente(Integer id, String nome, String cpf, String telefone) {
+	public User(Integer id, String name, String nationalId, String phone) {
 		super();
 		this.id = id;
-		this.nome = nome;
-		this.cpf = cpf;
-		this.telefone = telefone;
+		this.name = name;
+		this.nationalId = nationalId;
+		this.phone = phone;
 	}
 
 	public Integer getId() {
@@ -46,28 +46,28 @@ public class Cliente implements Serializable {
 		this.id = id;
 	}
 
-	public String getNome() {
-		return nome;
+	public String getName() {
+		return name;
 	}
 
-	public void setNome(String nome) {
-		this.nome = nome;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	public String getCpf() {
-		return cpf;
+	public String getNationalId() {
+		return nationalId;
 	}
 
-	public void setCpf(String cpf) {
-		this.cpf = cpf;
+	public void setNationalId(String nationalId) {
+		this.nationalId= nationalId;
 	}
 
-	public String getTelefone() {
-		return telefone;
+	public String getPhone() {
+		return phone;
 	}
 
-	public void setTelefone(String telefone) {
-		this.telefone = telefone;
+	public void setPhone(String phone) {
+		this.phone = phone;
 	}
 
 	@Override
@@ -83,7 +83,7 @@ public class Cliente implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Cliente other = (Cliente) obj;
+		User other = (User) obj;
 		return Objects.equals(id, other.id);
 	}
 }

@@ -9,24 +9,24 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.vendas.SleepSell.entities.Cliente;
-import com.vendas.SleepSell.services.ClienteService;
+import com.vendas.SleepSell.entities.Order;
+import com.vendas.SleepSell.services.OrderService;
 
 @RestController
-@RequestMapping(value = "/clientes")
-public class ClienteResource {
+@RequestMapping(value = "/orders")
+public class OrderResource {
 	@Autowired
-	private ClienteService service;
+	private OrderService service;
 	
 	@GetMapping
-	public ResponseEntity<List<Cliente>> findAll() {
-		List<Cliente> list = service.findAll();
+	public ResponseEntity<List<Order>> findAll() {
+		List<Order> list = service.findAll();
 		return ResponseEntity.ok().body(list);
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<Cliente> findById(@PathVariable Integer id) {
-		Cliente obj = service.findById(id);
+	public ResponseEntity<Order> findById(@PathVariable Integer id) {
+		Order obj = service.findById(id);
 		return ResponseEntity.ok().body(obj);
 	}
 }
