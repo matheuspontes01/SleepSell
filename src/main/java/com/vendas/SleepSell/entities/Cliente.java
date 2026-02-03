@@ -1,12 +1,14 @@
 package com.vendas.SleepSell.entities;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Objects;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -22,6 +24,9 @@ public class Cliente implements Serializable {
 	private String nome;
 	private String cpf;
 	private String telefone;
+	
+	@OneToMany(mappedBy = "cliente")
+	private List<Pedido> pedidos;
 	
 	public Cliente() {}
 	
