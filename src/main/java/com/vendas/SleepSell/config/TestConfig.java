@@ -10,11 +10,13 @@ import org.springframework.context.annotation.Profile;
 
 import com.vendas.SleepSell.entities.Order;
 import com.vendas.SleepSell.entities.Payment;
+import com.vendas.SleepSell.entities.Supplier;
 import com.vendas.SleepSell.entities.User;
 import com.vendas.SleepSell.entities.enums.OrderStatus;
 import com.vendas.SleepSell.entities.enums.PaymentMethod;
 import com.vendas.SleepSell.repositories.OrderRepository;
 import com.vendas.SleepSell.repositories.PaymentRepository;
+import com.vendas.SleepSell.repositories.SupplierRepository;
 import com.vendas.SleepSell.repositories.UserRepository;
 
 @Configuration
@@ -30,6 +32,9 @@ public class TestConfig implements CommandLineRunner{
 	@Autowired
 	private PaymentRepository paymentRepository;
 	
+	@Autowired
+	private SupplierRepository supplierRepository;
+	
 	@Override
 	public void run(String... args) throws Exception {
 		User u1 = new User(null, "Carlos", "55555555555", "62981818181");
@@ -42,9 +47,14 @@ public class TestConfig implements CommandLineRunner{
 		Payment pa1 = new Payment(null, Instant.parse("2025-09-05T21:07:00Z"), PaymentMethod.CASH, p1);
 		Payment pa2 = new Payment(null, Instant.parse("2025-10-22T20:11:49Z"), PaymentMethod.PAYPAL, p2);
 		
+		Supplier s1 = new Supplier(null, "OrtoBom", "ortobom@gmail.com", "1212123434", "Goiania", "Goias");
+		Supplier s2 = new Supplier(null, "Castor", "castor@gmail.com", "4176152434", "Sao Paulo", "Sao Paulo");
+		Supplier s3 = new Supplier(null, "Sol", "sol@gmail.com", "6779853444", "Rio de Janeiro", "Rio de Janeiro");
+		
 		userRepository.saveAll(Arrays.asList(u1, u2));
 		orderRepository.saveAll(Arrays.asList(p1, p2, p3));
 		paymentRepository.saveAll(Arrays.asList(pa1, pa2));
+		supplierRepository.saveAll(Arrays.asList(s1, s2, s3));
 	}
 	
 }
