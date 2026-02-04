@@ -9,9 +9,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 import com.vendas.SleepSell.entities.Order;
+import com.vendas.SleepSell.entities.Payment;
 import com.vendas.SleepSell.entities.User;
 import com.vendas.SleepSell.entities.enums.OrderStatus;
+import com.vendas.SleepSell.entities.enums.PaymentMethod;
 import com.vendas.SleepSell.repositories.OrderRepository;
+import com.vendas.SleepSell.repositories.PaymentRepository;
 import com.vendas.SleepSell.repositories.UserRepository;
 
 @Configuration
@@ -24,6 +27,9 @@ public class TestConfig implements CommandLineRunner{
 	@Autowired
 	private OrderRepository orderRepository;
 	
+	@Autowired
+	private PaymentRepository paymentRepository;
+	
 	@Override
 	public void run(String... args) throws Exception {
 		User u1 = new User(null, "Carlos", "55555555555", "62981818181");
@@ -33,9 +39,12 @@ public class TestConfig implements CommandLineRunner{
 		Order p2 = new Order(null, Instant.parse("2025-10-22T20:11:49Z"), OrderStatus.PAID, u2);
 		Order p3 = new Order(null, Instant.parse("2025-06-19T13:45:06Z"), OrderStatus.WAITING_PAYMENT, u2);
 		
+		Payment pa1 = new Payment(null, Instant.parse("2025-09-05T21:07:00Z"), PaymentMethod.CASH, p1);
+		Payment pa2 = new Payment(null, Instant.parse("2025-10-22T20:11:49Z"), PaymentMethod.PAYPAL, p2);
 		
 		userRepository.saveAll(Arrays.asList(u1, u2));
 		orderRepository.saveAll(Arrays.asList(p1, p2, p3));
+		paymentRepository.saveAll(Arrays.asList(pa1, pa2));
 	}
 	
 }
