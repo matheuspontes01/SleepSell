@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.time.Instant;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.vendas.SleepSell.entities.enums.OrderStatus;
 
 import jakarta.persistence.CascadeType;
@@ -34,6 +35,7 @@ public class Order implements Serializable {
 	private User user;
 	
 	@OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
+	@JsonIgnore
 	private Payment payment;
 	
 	public Order() {}

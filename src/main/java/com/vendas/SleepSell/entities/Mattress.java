@@ -1,45 +1,42 @@
 package com.vendas.SleepSell.entities;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "tb_user")
-public class User implements Serializable {
+@Table(name = "tb_mattress")
+public class Mattress implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-	
 	private String name;
-	private String nationalId;
-	private String phone;
+	private Integer stock;
+	private Double price;
 	
-	@OneToMany(mappedBy = "user")
-	@JsonIgnore
-	private List<Order> orders = new ArrayList<>();
+	@ManyToOne
+	@JoinColumn(name = "supplier_id")
+	private Supplier supplier;
 	
-	public User() {}
-	
-	public User(Integer id, String name, String nationalId, String phone) {
+	public Mattress() {}
+
+	public Mattress(Integer id, String name, Integer stock, Double price, Supplier supplier) {
 		super();
 		this.id = id;
 		this.name = name;
-		this.nationalId = nationalId;
-		this.phone = phone;
+		this.stock = stock;
+		this.price = price;
+		this.supplier = supplier;
 	}
 
 	public Integer getId() {
@@ -58,24 +55,28 @@ public class User implements Serializable {
 		this.name = name;
 	}
 
-	public String getNationalId() {
-		return nationalId;
+	public Integer getStock() {
+		return stock;
 	}
 
-	public void setNationalId(String nationalId) {
-		this.nationalId= nationalId;
+	public void setStock(Integer stock) {
+		this.stock = stock;
 	}
 
-	public String getPhone() {
-		return phone;
+	public Double getPrice() {
+		return price;
 	}
 
-	public void setPhone(String phone) {
-		this.phone = phone;
+	public void setPrice(Double price) {
+		this.price = price;
 	}
-	
-	public List<Order> getOrders() {
-		return orders;
+
+	public Supplier getSupplier() {
+		return supplier;
+	}
+
+	public void setSupplier(Supplier supplier) {
+		this.supplier = supplier;
 	}
 
 	@Override
@@ -91,7 +92,8 @@ public class User implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		User other = (User) obj;
+		Mattress other = (Mattress) obj;
 		return Objects.equals(id, other.id);
 	}
+	
 }
