@@ -10,12 +10,14 @@ import org.springframework.context.annotation.Profile;
 
 import com.vendas.SleepSell.entities.Mattress;
 import com.vendas.SleepSell.entities.Order;
+import com.vendas.SleepSell.entities.OrderItem;
 import com.vendas.SleepSell.entities.Payment;
 import com.vendas.SleepSell.entities.Supplier;
 import com.vendas.SleepSell.entities.User;
 import com.vendas.SleepSell.entities.enums.OrderStatus;
 import com.vendas.SleepSell.entities.enums.PaymentMethod;
 import com.vendas.SleepSell.repositories.MattressRepository;
+import com.vendas.SleepSell.repositories.OrderItemRepository;
 import com.vendas.SleepSell.repositories.OrderRepository;
 import com.vendas.SleepSell.repositories.PaymentRepository;
 import com.vendas.SleepSell.repositories.SupplierRepository;
@@ -40,14 +42,20 @@ public class TestConfig implements CommandLineRunner{
 	@Autowired
 	private MattressRepository mattressRepository;
 	
+	@Autowired
+	private OrderItemRepository orderItemRepository;
+	
 	@Override
 	public void run(String... args) throws Exception {
 		User u1 = new User(null, "Carlos", "55555555555", "62981818181");
 		User u2 = new User(null, "Maria", "44444445555", "62981199080");
+		userRepository.saveAll(Arrays.asList(u1, u2));
 		
 		Order p1 = new Order(null, Instant.parse("2025-09-05T19:07:00Z"), OrderStatus.SHIPPED, u1);
 		Order p2 = new Order(null, Instant.parse("2025-10-22T20:11:49Z"), OrderStatus.PAID, u2);
 		Order p3 = new Order(null, Instant.parse("2025-06-19T13:45:06Z"), OrderStatus.WAITING_PAYMENT, u2);
+		
+		orderRepository.saveAll(Arrays.asList(p1, p2, p3));
 		
 		Payment pa1 = new Payment(null, Instant.parse("2025-09-05T21:07:00Z"), PaymentMethod.CASH, p1);
 		Payment pa2 = new Payment(null, Instant.parse("2025-10-22T20:11:49Z"), PaymentMethod.PAYPAL, p2);
@@ -66,8 +74,14 @@ public class TestConfig implements CommandLineRunner{
 		
 		mattressRepository.saveAll(Arrays.asList(m1, m2, m3, m4, m5));
 		
-		userRepository.saveAll(Arrays.asList(u1, u2));
-		orderRepository.saveAll(Arrays.asList(p1, p2, p3));
+		OrderItem o1 = new OrderItem(p1, m5, 1, m5.getPrice());
+		OrderItem o2 = new OrderItem(p1, m2, 2, m2.getPrice());
+		OrderItem o3 = new OrderItem(p2, m1, 3, m1.getPrice());
+		OrderItem o4 = new OrderItem(p3, m3, 1, m3.getPrice());
+		OrderItem o5 = new OrderItem(p3, m4, 2, m4.getPrice());
+		
+		orderItemRepository.saveAll(Arrays.asList(o1, o2, o3, o4, o5));
+		
 		paymentRepository.saveAll(Arrays.asList(pa1, pa2));
 	}
 	
