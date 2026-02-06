@@ -4,10 +4,16 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.vendas.SleepSell.entities.Mattress;
 import com.vendas.SleepSell.repositories.MattressRepository;
+import com.vendas.SleepSell.services.exceptions.DatabaseException;
+import com.vendas.SleepSell.services.exceptions.ResourceNotFoundException;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class MattressService {
@@ -21,7 +27,7 @@ public class MattressService {
 	
 	public Mattress findById(Integer id) {
 		Optional<Mattress> obj = mattressRepository.findById(id);
-		return obj.get();
+		return obj.orElseThrow(() -> new ResourceNotFoundException(id));
 	}
 	
 	public Mattress insert(Mattress obj) {
@@ -29,13 +35,23 @@ public class MattressService {
 	}
 	
 	public void delete(Integer id) {
-		mattressRepository.deleteById(id);
+		try {
+			mattressRepository.deleteById(id);
+		} catch (EmptyResultDataAccessException e) {
+			throw new ResourceNotFoundException(id);
+		} catch (DataIntegrityViolationException e) {
+			throw new DatabaseException(e.getMessage());
+		}
 	}
 	
 	public Mattress update(Integer id, Mattress obj) {
-		Mattress entity = mattressRepository.getReferenceById(id);
-		updateData(entity, obj);
-		return mattressRepository.save(entity);
+		try {
+			Mattress entity = mattressRepository.getReferenceById(id);
+			updateData(entity, obj);
+			return mattressRepository.save(entity);
+		} catch (EntityNotFoundException e) {
+			throw new ResourceNotFoundException(id);
+		}
 	}
 
 	private void updateData(Mattress entity, Mattress obj) {

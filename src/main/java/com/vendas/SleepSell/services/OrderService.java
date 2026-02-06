@@ -4,10 +4,16 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.vendas.SleepSell.entities.Order;
 import com.vendas.SleepSell.repositories.OrderRepository;
+import com.vendas.SleepSell.services.exceptions.DatabaseException;
+import com.vendas.SleepSell.services.exceptions.ResourceNotFoundException;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class OrderService {
@@ -21,7 +27,7 @@ public class OrderService {
 	
 	public Order findById(Integer id) {
 		Optional<Order> obj = repository.findById(id);
-		return obj.get();
+		return obj.orElseThrow(() -> new ResourceNotFoundException(id));
 	}
 	
 	public Order insert(Order obj) {
@@ -29,13 +35,23 @@ public class OrderService {
 	}
 	
 	public void delete(Integer id) {
-		repository.deleteById(id);
+		try {
+			repository.deleteById(id);
+		} catch (EmptyResultDataAccessException e) {
+			throw new ResourceNotFoundException(id);
+		} catch (DataIntegrityViolationException e) {
+			throw new DatabaseException(e.getMessage());
+		}
 	}
 	
 	public Order update(Integer id, Order obj) {
-		Order entity = repository.getReferenceById(id);
-		updateData(entity, obj);
-		return repository.save(entity);
+		try {
+			Order entity = repository.getReferenceById(id);
+			updateData(entity, obj);
+			return repository.save(entity);
+		} catch (EntityNotFoundException e) {
+			throw new ResourceNotFoundException(id);
+		}
 	}
 
 	private void updateData(Order entity, Order obj) {
