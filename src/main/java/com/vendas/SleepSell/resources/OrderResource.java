@@ -56,4 +56,10 @@ public class OrderResource {
 		obj = service.update(id, obj);
 		return ResponseEntity.ok().body(obj);
 	}
+	
+	@PutMapping("/{id}/confirm")
+	public ResponseEntity<Void> confirmOrder(@PathVariable Integer id) {
+		service.confirmOrder(id);
+		return ResponseEntity.noContent().build();
+	}
 }

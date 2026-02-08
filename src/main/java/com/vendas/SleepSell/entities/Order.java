@@ -88,7 +88,7 @@ public class Order implements Serializable {
 		this.user = user;
 	}
 	
-	public Set<OrderItem> getItens() {
+	public Set<OrderItem> getItems() {
 		return items;
 	}
 	

@@ -87,6 +87,10 @@ public class Mattress implements Serializable {
 		this.supplier = supplier;
 	}
 	
+	public void addToStock(int quantity) {
+		this.stock += quantity;
+	}
+	
 	@JsonIgnore
 	public Set<Order> getOrders() {
 		Set<Order> set = new HashSet<>();
