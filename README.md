@@ -41,7 +41,7 @@ Essa separação garante baixo acoplamento e segue padrões utilizados em sistem
 
 Este diagrama foi utilizado como base para a construção deste projeto.
 
-<img width="953" height="527" alt="image" src="https://github.com/user-attachments/assets/96e8d2e5-9fdf-4b8c-bad4-b1f09be83984" />
+<img width="952" height="534" alt="image" src="https://github.com/user-attachments/assets/78bc3916-a909-4c26-9f14-67b9dde711ca" />
 
 
 ## 🔄 Fluxo real do Pedido
