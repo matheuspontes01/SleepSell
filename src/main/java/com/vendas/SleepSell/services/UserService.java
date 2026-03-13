@@ -8,7 +8,9 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import com.vendas.SleepSell.entities.Role;
 import com.vendas.SleepSell.entities.User;
+import com.vendas.SleepSell.repositories.RoleRepository;
 import com.vendas.SleepSell.repositories.UserRepository;
 import com.vendas.SleepSell.services.exceptions.DatabaseException;
 import com.vendas.SleepSell.services.exceptions.ResourceNotFoundException;
@@ -20,6 +22,9 @@ public class UserService {
 	@Autowired
 	private UserRepository repository;
 	
+	@Autowired
+	private RoleRepository roleRepository;
+
 	public List<User> findAll() {
 		return repository.findAll();
 	}
@@ -30,9 +35,14 @@ public class UserService {
 	}
 	
 	public User insert(User obj) {
-		return repository.save(obj);
-	}
-	
+        // Por padrão, todo novo usuário recebe a role BASIC
+        Role basicRole = roleRepository.findByAuthority("ROLE_BASIC");
+        if (basicRole != null) {
+            obj.getRoles().add(basicRole);
+        }
+        return repository.save(obj);
+    }
+
 	public void delete(Integer id) {
 		try {
 			repository.deleteById(id);
@@ -54,7 +64,7 @@ public class UserService {
 	}
 
 	private void updateData(User entity, User obj) {
-		entity.setName(obj.getName());
+		entity.setName(obj.getUsername());
 		entity.setEmail(obj.getEmail());
 		entity.setPassword(obj.getPassword());
 	}

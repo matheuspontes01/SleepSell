@@ -1,23 +1,28 @@
 package com.vendas.SleepSell.entities;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.FetchType;
 
 @Entity
 @Table(name = "tb_user")
-public class User implements Serializable {
-	
+public class User implements Serializable, UserDetails {
+
 	private static final long serialVersionUID = 1L;
 	
 	@Id
@@ -32,6 +37,12 @@ public class User implements Serializable {
 	@JsonIgnore
 	private List<Order> orders = new ArrayList<>();
 	
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "tb_user_role",
+		joinColumns = @JoinColumn(name = "user_id"),
+		inverseJoinColumns = @JoinColumn(name = "role_id"))
+	private Set<Role> roles = new HashSet<>();
+
 	public User() {}
 	
 	public User(Integer id, String name, String email, String password) {
@@ -50,7 +61,8 @@ public class User implements Serializable {
 		this.id = id;
 	}
 
-	public String getName() {
+	@Override
+	public String getUsername() {
 		return name;
 	}
 
@@ -78,6 +90,10 @@ public class User implements Serializable {
 		return orders;
 	}
 
+	public Set<Role> getRoles() {
+        return roles;
+    }
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
@@ -93,5 +109,35 @@ public class User implements Serializable {
 			return false;
 		User other = (User) obj;
 		return Objects.equals(id, other.id);
+	}
+
+	@Override
+	@JsonIgnore
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return roles;
+	}
+
+	@Override
+	@JsonIgnore
+	public boolean isAccountNonExpired() {
+		return true;
+	}
+
+	@Override
+	@JsonIgnore
+	public boolean isAccountNonLocked() {
+		return true;
+	}
+
+	@Override
+	@JsonIgnore
+	public boolean isCredentialsNonExpired() {
+		return true;
+	}
+
+	@Override
+	@JsonIgnore
+	public boolean isEnabled() {
+		return true;
 	}
 }
